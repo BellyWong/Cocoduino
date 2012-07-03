@@ -196,7 +196,7 @@
         NSString *buildErrorString = (buildErrorData != nil) ? [[NSString alloc] initWithData:buildErrorData encoding:NSUTF8StringEncoding] : nil;
         
         // ino was successful if terminationStatus is equal to 0
-        if ([buildTask terminationStatus] == 0 && buildErrorString.length <= 0) {
+        if ([buildTask terminationStatus] == 0 && buildErrorString.length == 0) {
             /*
              Check the binary size using avr-size.
             */

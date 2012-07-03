@@ -211,7 +211,7 @@
     for (NSMenuItem *item in [self menuItemsForSketchDirectoriesInDirectory:sketchbookLocation action:@selector(didSelectSketchbookItem:)])
         [self.sketchbookMenu addItem:item];
     
-    if (self.sketchbookMenu.itemArray.count <= 0)
+    if (self.sketchbookMenu.itemArray.count == 0)
         [self.sketchbookMenu addItemWithTitle:@"No Sketches" action:NULL keyEquivalent:@""];
 }
 
@@ -307,7 +307,7 @@
             [item setState:NSOnState];
     }
     
-    if (self.serialPortMenu.itemArray.count <= 0)
+    if (self.serialPortMenu.itemArray.count == 0)
         [self.serialPortMenu addItemWithTitle:@"No Serial Ports" action:NULL keyEquivalent:@""];
 }
 
@@ -345,7 +345,7 @@
         }
     }
     
-    if (self.importLibraryMenu.itemArray.count <= 0)
+    if (self.importLibraryMenu.itemArray.count == 0)
         [self.importLibraryMenu addItemWithTitle:@"No Libraries" action:NULL keyEquivalent:@""];
 }
 
