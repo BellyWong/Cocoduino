@@ -298,9 +298,15 @@
         else {
             if (terminationHandler != NULL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-					// In some circumstances (e.g., missing boards.txt), the error message is sent to the standard *output*, not standard error.
-					// So, when the error string is missing or empty, use the output string instead.
-					NSString *errorOutputString = [buildErrorString length] ? buildErrorString : buildOutputString;
+                    // In some circumstances (e.g., missing boards.txt), the error message is sent to the standard *output*, not standard error.
+                    // For missing boards.txt specifically, provide our own more meaningful error message.
+                    NSString *errorOutputString = nil;
+                    if ([buildOutputString rangeOfString:@"boards.txt"].location != NSNotFound)
+                        errorOutputString = NSLocalizedString(@"Couldn't find list of supported boards. The Arduino IDE you have may be one that this version of Cocoduino doesn't know how to handle. Try upgrading Cocoduino or downgrading the Arduino IDE.", @"Error message for missing-boards.txt build failures");
+                    // For other such errors, when the error string is missing or empty, use the output string instead.
+                    if (errorOutputString == nil)
+                        errorOutputString = [buildErrorString length] ? buildErrorString : buildOutputString;
+
                     NSError *error = [NSError errorWithDomain:@"FKInoToolErrorDomain" code:FKInoToolErrorBuildFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ino build failed, see log output for more information.", NSLocalizedDescriptionKey, errorOutputString, NSLocalizedFailureReasonErrorKey, nil]];
                     terminationHandler(NO, FKInoToolTypeBuild, 0, error, errorOutputString);
                 });
