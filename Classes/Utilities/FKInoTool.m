@@ -298,8 +298,11 @@
         else {
             if (terminationHandler != NULL) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    NSError *error = [NSError errorWithDomain:@"FKInoToolErrorDomain" code:FKInoToolErrorBuildFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ino build failed, see log output for more information.", NSLocalizedDescriptionKey, buildErrorString, NSLocalizedFailureReasonErrorKey, nil]];
-                    terminationHandler(NO, FKInoToolTypeBuild, 0, error, buildOutputString);
+					// In some circumstances (e.g., missing boards.txt), the error message is sent to the standard *output*, not standard error.
+					// So, when the error string is missing or empty, use the output string instead.
+					NSString *errorOutputString = [buildErrorString length] ? buildErrorString : buildOutputString;
+                    NSError *error = [NSError errorWithDomain:@"FKInoToolErrorDomain" code:FKInoToolErrorBuildFailedError userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Ino build failed, see log output for more information.", NSLocalizedDescriptionKey, errorOutputString, NSLocalizedFailureReasonErrorKey, nil]];
+                    terminationHandler(NO, FKInoToolTypeBuild, 0, error, errorOutputString);
                 });
             }
         }
